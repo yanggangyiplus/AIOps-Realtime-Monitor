@@ -12,14 +12,14 @@ import psutil
 # 프로젝트 모듈 임포트
 import sys
 from pathlib import Path
-project_root = Path(__file__).parent.parent
+project_root = Path(__file__).parent.parent.parent
 sys.path.insert(0, str(project_root))
 
-from app.state_manager import init_session_state
-from app.controls_sidebar import render_sidebar
-from app.render_charts import plot_response_time, plot_cpu_usage, render_recent_status_codes
-from app.render_metrics import render_main_metrics, render_statistics
-from app.render_alerts import render_alerts_panel
+from app.web.state_manager import init_session_state
+from app.web.controls_sidebar import render_sidebar
+from app.web.render_charts import plot_response_time, plot_cpu_usage, render_recent_status_codes
+from app.web.render_metrics import render_main_metrics, render_statistics
+from app.web.render_alerts import render_alerts_panel
 
 from src.processing import Preprocessor, WindowManager
 from src.feature import FeatureEngineer

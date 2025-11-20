@@ -16,5 +16,5 @@ fi
 
 # Streamlit 대시보드 실행
 echo "AIOps Real-time Monitor 대시보드를 시작합니다..."
-streamlit run app/dashboard.py --server.port 8501 --server.address localhost
+streamlit run app/web/dashboard.py --server.port 8501 --server.address localhost
 
