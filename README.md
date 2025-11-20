@@ -10,39 +10,28 @@
 
 ## 목차
 
-- [TL;DR](#tldr)
 - [프로젝트 개요](#프로젝트-개요)
+- [핵심 가치](#핵심-가치)
 - [시스템 아키텍처](#시스템-아키텍처)
-- [핵심 기능](#핵심-기능)
+- [주요 기능](#주요-기능)
 - [기술 스택](#기술-스택)
 - [역량](#역량)
 - [설치 및 실행](#설치-및-실행)
 - [프로젝트 구조](#프로젝트-구조)
-- [설정](#설정)
-- [사용 방법](#사용-방법)
-
----
-
-## TL;DR
-
-**핵심 요약**:
-- **실시간 데이터 수집**: HTTP API 폴링, WebSocket, Socket 기반 스트림 수집
-- **이상 탐지**: Isolation Forest, Z-score 기반 ML 이상 탐지 및 HTTP 오류 즉시 감지
-- **성능 모니터링**: 응답 시간, RPS, 에러율 실시간 추적
-- **리소스 모니터링**: CPU, Memory 사용률 모니터링
-- **보안 탐지**: IP 기반 공격 패턴 탐지
-- **실시간 대시보드**: Streamlit 기반 모니터링 및 시각화
-- **데이터 내보내기**: CSV/JSON 형식으로 데이터 다운로드
 
 ---
 
 ## 프로젝트 개요
 
-### 목적
+### 배경 및 목적
 
-서비스 운영 중 발생하는 실시간 신호를 수집하여 이상 징후, 급격한 변화점, 장애 가능성 패턴을 즉시 탐지하는 시스템입니다.
+서비스 운영 중 발생하는 장애는 대부분 사전 신호가 있습니다. 응답 시간 증가, 5xx 에러 증가, 특정 IP의 급증 등이 그 예입니다. 하지만 이러한 신호를 실시간으로 감지하고 대응하는 것은 쉽지 않습니다.
 
-### 이 프로젝트가 해결하는 문제
+기존 모니터링 도구들은 주로 threshold 기반으로 동작하며, ML 기반 패턴 탐지가 약합니다. 또한 로그 기반 분석은 반응 속도가 느려서 장애가 발생한 후에야 알 수 있는 경우가 많습니다.
+
+이 프로젝트는 **실시간 스트림 데이터를 ML 기반으로 분석하여 이상을 조기 감지**하는 시스템입니다. HTTP API를 실시간으로 모니터링하고, 이상 징후를 즉시 탐지하여 장애 발생 전에 대응할 수 있도록 합니다.
+
+### 해결하는 문제
 
 현업에서는 아래 이유로 실시간 이상 감지가 어렵습니다:
 
@@ -53,14 +42,24 @@
 
 이 프로젝트는 실시간 스트림 데이터를 ML 기반으로 분석하여 이상을 조기 감지합니다.
 
-### 주요 특징
+---
 
-- **실시간 처리**: 초당 수십~수백 건의 스트림 데이터 실시간 처리
-- **다중 탐지 방법**: 통계적 방법과 ML 방법을 조합한 하이브리드 탐지
-- **즉시 HTTP 오류 감지**: 5xx, 4xx 상태 코드 즉시 탐지 및 알림
-- **성능 이상 탐지**: 응답 시간 급증, RPS 급증/급감, 에러율 증가 자동 탐지
-- **리소스 이상 탐지**: CPU spike, Memory leak 등 시스템 리소스 이상 탐지
-- **보안 패턴 탐지**: 동일 IP 반복 호출, 짧은 주기 반복 요청 등 공격 패턴 탐지
+## 핵심 가치
+
+### 1. 실시간 이상 탐지
+초당 수백 건의 데이터를 실시간으로 처리하여 HTTP 오류, 성능 이상, 리소스 이상을 즉시 탐지합니다.
+
+### 2. ML 기반 패턴 분석
+단순 threshold가 아닌 Isolation Forest, Z-score 등 ML/통계 방법을 활용하여 미세한 이상 패턴을 감지합니다.
+
+### 3. 운영 관점의 문제 해결
+- **장애 예방**: 장애 발생 전 징후를 조기 감지하여 사전 대응 가능
+- **즉시 알림**: HTTP 5xx, 4xx 오류 즉시 탐지 및 알림
+- **성능 모니터링**: 응답 시간, RPS, 에러율 실시간 추적
+- **리소스 관리**: CPU, Memory 이상을 실시간으로 모니터링하여 리소스 부족 사전 예방
+
+### 4. 확장 가능한 아키텍처
+모듈화된 구조로 새로운 탐지 방법이나 수집 방식을 쉽게 추가할 수 있습니다.
 
 ---
 
@@ -93,7 +92,6 @@
 │  • Error Rate                                               │
 │  • Response Time Statistics                                 │
 │  • Rolling Features (Mean, Std, EMA)                        │
-│  • Spike Score                                              │
 └───────────────────────┬─────────────────────────────────────┘
                         ↓
 ┌─────────────────────────────────────────────────────────────┐
@@ -104,14 +102,12 @@
 │  • Security Patterns (IP-based attacks)                    │
 │  • Isolation Forest (ML)                                    │
 │  • Z-score Detection                                        │
-│  • Change-point Detection                                   │
 └───────────────────────┬─────────────────────────────────────┘
                         ↓
 ┌─────────────────────────────────────────────────────────────┐
 │              Alert System                                   │
 │  • Multi-level Alerts (Critical/Warning/Info)              │
 │  • Deduplication                                            │
-│  • Alert History Management                                 │
 └───────────────────────┬─────────────────────────────────────┘
                         ↓
 ┌─────────────────────────────────────────────────────────────┐
@@ -125,45 +121,24 @@
 
 ---
 
-## 핵심 기능
+## 주요 기능
 
 ### 1. Real-time Data Ingestion
 - HTTP API 폴링: 실제 웹사이트나 API를 주기적으로 호출하여 모니터링
 - WebSocket/Socket: 실시간 스트림 데이터 수집
 - Mock Stream: 테스트용 데이터 생성
 
-### 2. Streaming Preprocessing
-- Noise 제거
-- Rolling window smoothing
-- Outlier clipping
-- Time-window 집계
-
-### 3. Feature Engineering
-- RPS (Requests Per Second)
-- Error Rate
-- Spike score
-- Moving average
-- EMA (Exponential Moving Average)
-- Rolling std / var
-
-### 4. Real-time Anomaly Detection
+### 2. Real-time Anomaly Detection
 - **HTTP 오류 탐지**: 5xx, 4xx 상태 코드 즉시 감지
 - **성능 이상 탐지**: 응답 시간 급증, RPS 급증/급감, 에러율 증가
 - **리소스 이상 탐지**: CPU spike, Memory leak, OOM 경고
 - **보안 공격 탐지**: 동일 IP 반복 호출, 짧은 주기 반복 요청
 - **ML 기반 탐지**: Isolation Forest, Z-score, Change-point Detection
 
-### 5. Alert System
-- 조건 기반 경고
-- ML 기반 score 경고
-- Multi-level 알림 (Critical/Warning/Info)
-- 중복 제거 및 히스토리 관리
-
-### 6. Live Monitoring Dashboard
+### 3. Live Monitoring Dashboard
 - Streamlit 실시간 차트
 - Anomaly highlight
 - Rolling trend plot
-- Last events feed
 - 데이터 내보내기 (CSV/JSON)
 
 ---
@@ -283,41 +258,6 @@ AIOps-Realtime-Monitor/
 
 ---
 
-## 설정
-
-설정 파일은 `configs/` 디렉토리에 있습니다:
-
-### config_stream.yaml
-스트림 수집 설정 (모드, 호스트, 포트 등)
-
-```yaml
-stream:
-  mode: "http"  # mock, socket, websocket, http
-  http:
-    urls:
-      - "https://www.google.com"
-    interval: 1.0
-    timeout: 5
-```
-
-### config_anomaly.yaml
-이상 탐지 설정 (방법, 임계값 등)
-
-```yaml
-anomaly:
-  method: "hybrid"  # isolation_forest, zscore, iqr, hybrid
-  isolation_forest:
-    contamination: 0.1
-    n_estimators: 100
-  zscore:
-    threshold: 3.0
-```
-
-### config_dashboard.yaml
-대시보드 설정 (차트, 알림 등)
-
----
-
 ## 사용 방법
 
 ### 기본 사용 흐름
@@ -343,22 +283,6 @@ anomaly:
 
 5. **데이터 내보내기**
    - 사이드바 또는 메인 영역에서 CSV/JSON 다운로드
-
-### 예시: HTTP 에러 모니터링
-
-```python
-# configs/config_stream.yaml에서 설정
-stream:
-  mode: "http"
-  http:
-    urls:
-      - "https://httpbin.org/status/500"
-      - "https://httpbin.org/status/503"
-      - "https://httpbin.org/status/404"
-    interval: 1.0
-```
-
-이 설정으로 여러 엔드포인트를 동시에 모니터링하고, HTTP 에러가 발생하면 즉시 알림을 받을 수 있습니다.
 
 ---
 
@@ -396,7 +320,7 @@ stream:
 - 데이터 내보내기 기능
 
 ### 향후 확장 가능
-- 로그 분석 통합 (Log-AI-Predictor와 통합)
+- 로그 분석 통합
 - DB/Redis 모니터링
 - Cloud Infra 이벤트 (AWS CloudWatch 등)
 - Kubernetes 이벤트
