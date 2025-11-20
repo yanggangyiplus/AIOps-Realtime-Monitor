@@ -1,0 +1,54 @@
+# 스트림 수집 설정
+stream:
+  # 수집 모드: socket, websocket, mock, http
+  mode: "mock"
+  
+  # Socket 설정
+  socket:
+    host: "localhost"
+    port: 8888
+    buffer_size: 1024
+    
+  # WebSocket 설정
+  websocket:
+    url: "ws://localhost:8765"
+    reconnect_interval: 5
+    
+  # HTTP 폴링 설정 (실제 웹사이트/API 모니터링)
+  http:
+    # 모니터링할 URL 리스트
+    urls:
+      - "https://www.google.com"
+      # - "https://api.github.com"
+      # - "https://httpbin.org/get"
+    # 폴링 간격 (초)
+    interval: 1.0
+    # 요청 타임아웃 (초)
+    timeout: 5
+    # HTTP 메서드 (GET, POST 등)
+    method: "GET"
+    # HTTP 헤더 (선택적)
+    headers:
+      # "Authorization": "Bearer YOUR_TOKEN"
+      # "Content-Type": "application/json"
+    
+  # Mock Stream 설정
+  mock:
+    # 초당 생성할 이벤트 수
+    events_per_second: 10
+    # 이상 발생 확률 (0.0 ~ 1.0)
+    anomaly_probability: 0.05
+    # 시뮬레이션 지속 시간 (초, 0이면 무한)
+    duration: 0
+    
+  # 데이터 포맷
+  data_format:
+    fields:
+      - timestamp
+      - endpoint
+      - status_code
+      - response_time
+      - cpu_usage
+      - memory_usage
+    timestamp_format: "%Y-%m-%d %H:%M:%S.%f"
+

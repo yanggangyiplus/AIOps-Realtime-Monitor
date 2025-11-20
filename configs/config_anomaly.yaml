@@ -1,0 +1,36 @@
+# 이상 탐지 설정
+anomaly:
+  # 탐지 방법: isolation_forest, zscore, iqr, hybrid
+  method: "hybrid"
+  
+  # Isolation Forest 설정
+  isolation_forest:
+    contamination: 0.1
+    n_estimators: 100
+    max_samples: 256
+    
+  # Z-score 설정
+  zscore:
+    threshold: 3.0
+    window_size: 100
+    
+  # IQR 설정
+  iqr:
+    multiplier: 1.5
+    window_size: 100
+    
+  # Change-point 탐지 설정
+  changepoint:
+    enabled: true
+    sensitivity: 0.3
+    min_change: 0.2
+    
+  # 특징 선택
+  features:
+    - rps
+    - error_rate
+    - response_time_mean
+    - response_time_std
+    - cpu_usage
+    - memory_usage
+

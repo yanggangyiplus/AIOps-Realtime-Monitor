@@ -1,0 +1,28 @@
+# 실시간 스트림 처리
+websocket-client>=1.6.0
+python-socketio>=5.10.0
+requests>=2.31.0
+psutil>=5.9.0
+
+# 데이터 처리
+pandas>=2.0.0
+numpy>=1.24.0
+
+# 이상 탐지
+scikit-learn>=1.3.0
+scipy>=1.11.0
+
+# 대시보드
+streamlit>=1.28.0
+plotly>=5.17.0
+
+# 설정 관리
+pyyaml>=6.0
+
+# 로깅
+loguru>=0.7.0
+
+# API (옵션)
+fastapi>=0.104.0
+uvicorn>=0.24.0
+
